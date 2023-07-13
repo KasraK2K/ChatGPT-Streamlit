@@ -1,2 +1,5 @@
 .idea/
 .chroma/
+__pycache__/
+
+constants.py

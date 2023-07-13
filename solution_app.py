@@ -7,7 +7,7 @@ from langchain.document_loaders import DirectoryLoader
 from langchain.indexes import VectorstoreIndexCreator
 from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
-from langchain.utilities import WikipediaAPIWrapper
+from langchain.utilities import WikipediaAPIWrapper, GoogleSearchAPIWrapper
 
 os.environ['OPENAI_API_KEY'] = apiKey
 os.environ["OPENAI_ORGANIZATION"] = organizationId
@@ -19,8 +19,10 @@ local_index = VectorstoreIndexCreator().from_loaders([local_loader])
 # Instance
 llm = OpenAI(temperature=0.9, model_name="gpt-3.5-turbo")
 wiki = WikipediaAPIWrapper()
+google = GoogleSearchAPIWrapper()
 
 
+# Find answer and write response in separated expander
 def write_response(selected_options):
     if "Local Data" in selected_options:
         local_answer = local_index.query(prompt)
@@ -42,29 +44,37 @@ def write_response(selected_options):
         with st.expander(label="Wikipedia Answer", expanded=True):
             st.write(wikipedia_answer)
 
+    if "Google" in selected_options:
+        google_answer = google.run(prompt)
+        with st.expander(label="Google Answer", expanded=True):
+            st.write(google_answer)
+
     if "Default" in selected_options:
         chatgpt_answer = llm(prompt)
         with st.expander("OpenAI Answer", expanded=True):
             st.write(chatgpt_answer)
 
 
-# App Framework
+# Page Title
 st.markdown(
     body="""<p style="font-size: 46px; font-weight: 900; color: #ff4a5f">
         Embargo <span style="color: #0d243e">AI Model</span></p>
     """,
     unsafe_allow_html=True
 )
+
+# Create form
 with st.form("my_form", clear_on_submit=True):
     prompt = st.text_area(label='Ask your question here...', placeholder="Add Text")
     options = st.multiselect(
         label="Please Select Engine:",
-        options=["Local Data", "Local ChatOpenAI", "Local OpenAI", "Wikipedia", "Default"],
+        options=["Local Data", "Local ChatOpenAI", "Local OpenAI", "Wikipedia", "Google", "Default"],
         default="Local Data"
     )
-    submit_button = st.form_submit_button(label="Submit", type="primary", use_container_width=True)
+    submit_button = st.form_submit_button(label="Submit", type="primary", use_container_width=False)
 
+# Fetch data and write response by click on submit
 if submit_button and prompt and len(prompt):
     with st.expander(label="Your Question:", expanded=True):
-        st.write(prompt)
+        st.write(f'🎙<span style="color: #A0A2A7">You:</span><br />{prompt}', unsafe_allow_html=True)
     write_response(selected_options=options)

@@ -1,6 +1,6 @@
 # Bring in Deps
 import os
-# from constants import apiKey, organizationId
+from constants import apiKey, organizationId
 
 import streamlit as st
 from langchain.document_loaders import DirectoryLoader
@@ -10,10 +10,10 @@ from langchain.chat_models import ChatOpenAI
 from langchain.tools import Tool, WikipediaQueryRun
 from langchain.utilities import WikipediaAPIWrapper, GoogleSearchAPIWrapper
 
-# os.environ['OPENAI_API_KEY'] = apiKey
-# os.environ["OPENAI_ORGANIZATION"] = organizationId
-# os.environ["GOOGLE_API_KEY"] = ''
-# os.environ["GOOGLE_CSE_ID"] = ''
+os.environ['OPENAI_API_KEY'] = apiKey
+os.environ["OPENAI_ORGANIZATION"] = organizationId
+os.environ["GOOGLE_API_KEY"] = ''
+os.environ["GOOGLE_CSE_ID"] = ''
 
 
 # Find answer and write response in separated expander

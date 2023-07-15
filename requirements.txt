@@ -95,7 +95,7 @@ jupyter_server_terminals==0.4.4
 jupyterlab-pygments==0.2.2
 jupyterlab-widgets==3.0.7
 l18n==2021.3
-langchain==0.0.231
+langchain~=0.0.230
 langchainplus-sdk==0.0.20
 langcodes==3.3.0
 localstack-client==2.0
